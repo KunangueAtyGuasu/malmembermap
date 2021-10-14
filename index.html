@@ -13,6 +13,9 @@
             padding: 0;
         }
 
+        a.bio {text-decoration: none; }
+        a.bio { color: inherit; } 
+
         #map {
             position: absolute;
             top: 0;
@@ -108,7 +111,7 @@
                     if (propertyList.hasOwnProperty(key)) {
                         const str = propertyList[key].split("|");
                         if(str[1]){
-                            membername = '<a href="'+ str[1] +'" target="_blank" rel="noopener noreferrer">' + str[0]+'</a>';
+                            membername = '<a class="bio" href="'+ str[1] +'" target="_blank" rel="noopener noreferrer">' + str[0]+'</a>';
                         }else{
                             membername = str[0];
                         }
