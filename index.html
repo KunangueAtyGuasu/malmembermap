@@ -108,7 +108,7 @@
                     if (propertyList.hasOwnProperty(key)) {
                         const str = propertyList[key].split("|");
                         if(str[1]){
-                            membername = '<a href="'+ str[1] +'">' + str[0]+'</a>';
+                            membername = '<a href="'+ str[1] +'" target="_blank" rel="noopener noreferrer">' + str[0]+'</a>';
                         }else{
                             membername = str[0];
                         }
