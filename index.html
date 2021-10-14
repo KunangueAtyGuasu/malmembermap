@@ -106,7 +106,13 @@
                 var memberList = "";
                 for (var key in propertyList) {
                     if (propertyList.hasOwnProperty(key)) {
-                        memberList = memberList + propertyList[key] + '<br>';
+                        const str = propertyList[key].split("|");
+                        if(str[1]){
+                            membername = '<a href="'+ str[1] +'">' + str[0]+'</a>';
+                        }else{
+                            membername = str[0];
+                        }
+                        memberList = memberList + membername + '<br>';
                     }
                 }
                 popup.setLngLat(coordinates).setHTML('<div id="memberlist_popup">'+ memberList +'</div>').addTo(map);
