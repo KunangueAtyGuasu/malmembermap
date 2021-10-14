@@ -107,16 +107,21 @@
                 const coordinates = e.features[0].geometry.coordinates;
                 const propertyList = e.features[0].properties;
                 var memberList = "";
+                var list = [];
                 for (var key in propertyList) {
                     if (propertyList.hasOwnProperty(key)) {
-                        const str = propertyList[key].split("|");
+                        list.push(propertyList[key]);
+                    }
+                }
+                var list_sorted = list.sort();
+                for (var i=0; i<list_sorted.length; i++) {
+                        const str = list_sorted[i].split("|");
                         if(str[1]){
                             membername = '<a class="bio" href="'+ str[1] +'" target="_blank" rel="noopener noreferrer">' + str[0]+'</a>';
                         }else{
                             membername = str[0];
                         }
                         memberList = memberList + membername + '<br>';
-                    }
                 }
                 popup.setLngLat(coordinates).setHTML('<div id="memberlist_popup">'+ memberList +'</div>').addTo(map);
                 }
