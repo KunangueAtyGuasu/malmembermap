@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>MAL Team Members Map</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .mapboxgl-popup-content {
+            text-align: left;
+            font-family: 'Open Sans', sans-serif;
+            width: 150px;
+            box-shadow: 3px 3px 2px #69411d;
+            background-color: #ffffff;
+            opacity: 0.85;
+        }
+
+        #memberlist_popup {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoidWNsbWFsIiwiYSI6ImNrczRjeDdvcDJtY3cyd3M3ZDE2N2dxdnYifQ.abnRmulcY5B6-xFJBqzklQ';
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/uclmal/ckun1x2y09q2417nvakkzdirh',
+        center: [6.459001, 34.820715],
+        pitch: 0,
+        bearing: 0,
+        zoom: 1.53
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.FullscreenControl());
+
+    var selectedStateId = null;
+
+    const popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: true
+    });
+
+    map.on('load', () => {
+        map.addSource('location_data', {
+            type: 'geojson',
+            data: 'https://api.mapbox.com/datasets/v1/uclmal/ckuoks3tv3c2227mtwdteefv7/features?access_token=pk.eyJ1IjoidWNsbWFsIiwiYSI6ImNrczRjeDdvcDJtY3cyd3M3ZDE2N2dxdnYifQ.abnRmulcY5B6-xFJBqzklQ',
+            generateId: true
+        });
+
+
+        map.addLayer({
+            'id': 'location_pt',
+            'type': 'circle',
+            'source': 'location_data',
+            'paint': {
+                'circle-color': '#f90606',
+                'circle-radius': [
+                    'case',
+                    ['boolean', ['feature-state', 'selected'], false],
+                    10,
+                    5
+                    ]
+            }
+        });
+
+
+        // Update feature state when clicking on features
+        map.on('click', 'location_pt', (e) => {
+            e.preventDefault();
+            if (e.features.length > 0) {
+                if (selectedStateId !== null) {
+                    map.setFeatureState(
+                        { source: 'location_data', id: selectedStateId },
+                        { selected: false }
+                    );
+                }
+                selectedStateId = e.features[0].id;
+                map.setFeatureState(
+                    { source: 'location_data', id: selectedStateId },
+                    { selected: true }
+                    );
+                const coordinates = e.features[0].geometry.coordinates;
+                const propertyList = e.features[0].properties;
+                var memberList = "";
+                for (var key in propertyList) {
+                    if (propertyList.hasOwnProperty(key)) {
+                        memberList = memberList + propertyList[key] + '<br>';
+                    }
+                }
+                popup.setLngLat(coordinates).setHTML('<div id="memberlist_popup">'+ memberList +'</div>').addTo(map);
+                }
+        });
+
+
+        // Click anywhere on the map to clear highlight and pop-up
+        map.on('click', (e) => {
+            if (e.defaultPrevented === false) {
+                if (selectedStateId !== null) {
+                    map.setFeatureState(
+                        { source: 'location_data', id: selectedStateId },
+                        { selected: false }
+                    );
+                    }
+                    selectedStateId = null;
+                    popup.remove();
+                }
+            });
+
+    });
+
+
+
+</script>
+
+</body>
+</html>
