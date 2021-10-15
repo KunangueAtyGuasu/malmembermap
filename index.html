@@ -110,10 +110,20 @@
                 var list = [];
                 for (var key in propertyList) {
                     if (propertyList.hasOwnProperty(key)) {
-                        list.push(propertyList[key]);
+                        list.push([propertyList[key].substr(0,propertyList[key].indexOf(' ')), propertyList[key].substr(propertyList[key].indexOf(' ')+1)]);
                     }
                 }
-                var list_sorted = list.sort();
+                list.sort(
+                    function(a,b) {
+                        if (a[1] == b[1])
+                            return a[0] < b[0] ? -1 : 1;
+                            return a[1] < b[1] ? -1 : 1;
+                        }
+                    );
+                var list_sorted = [];
+                for (var i=0; i<list.length; i++) {
+                    list_sorted.push(list[i][0] + " " + list[i][1]);
+                }
                 for (var i=0; i<list_sorted.length; i++) {
                         const str = list_sorted[i].split("|");
                         if(str[1]){
