@@ -78,7 +78,12 @@
             'type': 'circle',
             'source': 'location_data',
             'paint': {
-                'circle-color': '#f90606',
+                'circle-color': [
+                    'case',
+                    ['boolean', ['has', 'PTM1'], false],
+                    '#f90606',
+                    '#6495ED'
+                    ],
                 'circle-radius': [
                     'case',
                     ['boolean', ['feature-state', 'selected'], false],
